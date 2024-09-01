@@ -1,7 +1,7 @@
+import UIOverlay from "../../components/UIOverlay";
+
 export default function Timetable() {
   return (
-    <>
-      <div>Timetable</div>
-    </>
+    <UIOverlay pageName="Timetable"></UIOverlay>
   );
 }

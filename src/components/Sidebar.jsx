@@ -17,7 +17,7 @@ export default function Sidebar() {
     <Box sx={{width: sidebarWidth}}>
     <CssBaseline />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+        {["Dashboard", "Timetable", "Task", "Events"].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
