@@ -1,7 +1,9 @@
+import UIOverlay from "../../components/UIOverlay";
+
 export default function Events() {
   return (
-    <>
-      <div>Events</div>
-    </>
+    <UIOverlay pageName="Events">
+
+    </UIOverlay>
   );
 }

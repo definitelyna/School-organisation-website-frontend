@@ -1,8 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import { createBrowserRouter, Router, RouterProvider } from "react-router-dom";
-import HomePage from "./pages/home_page/HomePage.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Timetable from "./pages/timetable/Timetable.jsx";
 import Events from "./pages/events/Events.jsx";
 import Tasks from "./pages/tasks/Tasks.jsx";
@@ -10,12 +9,12 @@ import Tasks from "./pages/tasks/Tasks.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <Dashboard />,
   },
 
   {
-    path: "/homepage",
-    element: <HomePage />,
+    path: "/dashboard",
+    element: <Dashboard />,
   },
 
   {
