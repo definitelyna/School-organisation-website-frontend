@@ -18,7 +18,7 @@ export default function DayTimetable(prop) {
             }}
           >
             <Typography>{period.name}</Typography>
-            <Typography>{period.time}</Typography>
+            <Typography>{period.getFormattedTime()}</Typography>
           </Paper>
         </Grid>
       ))}

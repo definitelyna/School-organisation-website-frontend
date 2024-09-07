@@ -1,34 +1,62 @@
 import { Paper, Select, MenuItem } from "@mui/material";
+
+import Button from "@mui/material/Button";
 import UIOverlay from "../../components/UIOverlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DayTimetable from "./components/DayTimetable";
 import WeekTimetable from "./components/WeekTimetable";
 import style from "./Timetable.module.css";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import CreatePeriod from "./components/CreatePeriod";
+import AddIcon from "@mui/icons-material/Add";
 
-function Period(name, day, time, note) {
-  this.name = name;
-  this.day = day;
-  this.time = time;
-  this.note = note;
+dayjs.extend(customParseFormat);
+
+class Period {
+  constructor(name, dayOfWeek, startTime, endTime, note) {
+    this.name = name; //string
+    this.dayOfWeek = dayOfWeek; //string
+    this.startTime = startTime; //dayjs data type
+    this.endTime = endTime; //dayjs data type
+    this.note = note; //string
+  }
+
+  getInfo() {
+    return {
+      name: this.name,
+      dayOfWeek: this.dayOfWeek,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      note: this.note,
+    };
+  }
+
+  getFormattedTime() {
+    return `${this.startTime} - ${this.endTime}`;
+  }
 }
 
 const testPeriod1 = new Period(
   "Physics",
   "Monday",
-  "12:15pm - 1:00pm",
+  dayjs("13:30", "h:mm").format("h:mm"),
+  dayjs("1:30", "H:mm").format("H:mm"),
   "Fucking hate this class"
 );
 const testPeriod2 = new Period(
   "Maths",
   "Monday",
-  "1:00pm - 2:00pm",
+  dayjs().set("hour", 8).set("minute", 15),
+  dayjs().set("hour", 9).set("minute", 10),
   "Fucking hate this class"
 );
 
 const testPeriod3 = new Period(
   "Computer Science",
   "Monday",
-  "8:00-10:00",
+  dayjs().set("hour", 8).set("minute", 15),
+  dayjs().set("hour", 9).set("minute", 10),
   "Fucking hate this class"
 );
 
@@ -44,6 +72,26 @@ export default function Timetable() {
   });
   const [currentDaySelected, setCurrentDaySelected] = useState("Monday");
   const [view, setView] = useState("Day");
+  const [createPeriodOpen, setCreatePeriodOpen] = useState(false);
+  const [newPeriodAdded, setNewPeriodAdded] = useState(false);
+
+  const fetchTimetableData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/periods");
+      console.log(response);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  fetchTimetableData();
+
+  const handleCreatePeriodOpen = () => {
+    setCreatePeriodOpen(true);
+  };
+  const handleCreatePeriodClose = () => {
+    setCreatePeriodOpen(false);
+  };
 
   const handleDayChange = (e) => {
     setCurrentDaySelected(e.target.value);
@@ -80,6 +128,9 @@ export default function Timetable() {
           <MenuItem value={"Day"}>Day</MenuItem>
           <MenuItem value={"Week"}>Week</MenuItem>
         </Select>
+        <Button onClick={handleCreatePeriodOpen} color="transparent">
+          <AddIcon />
+        </Button>
       </div>
 
       <Paper sx={{ width: "400px", marginInline: "auto" }} elevation={6}>
@@ -92,8 +143,8 @@ export default function Timetable() {
             currentDay={currentDaySelected}
           />
         )}
-
       </Paper>
+      <CreatePeriod open={createPeriodOpen} onClose={handleCreatePeriodClose} />
     </UIOverlay>
   );
 }
