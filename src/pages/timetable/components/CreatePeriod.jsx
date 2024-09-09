@@ -2,14 +2,16 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import {TextField, InputLabel} from "@mui/material";
 
 /**
  * HEY FUTURE NA WHOS PICKING UP THE SLACK OF DOING THE ADDING THE PERIOD PART
  * I already added the UI of it, and haven't done anythin to make it work.
  * The Modal is the popup thing and the child modal is just a nested modal
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 const style = {
@@ -57,6 +59,12 @@ function ChildModal() {
 }
 
 export default function CreatePeriod(prop) {
+  const [periodName, setPeriodName] = useState("");
+  const [periodDay, setPeriodDay] = useState("");
+  const [periodStartTime, setPeriodStartTime] = useState("");
+  const [periodEndTime, setPeriodEndTime] = useState("");
+  const [periodNote, setPeriodNote] = useState("");
+
   return (
     <Modal
       open={prop.open}
@@ -66,10 +74,18 @@ export default function CreatePeriod(prop) {
     >
       <Box sx={{ ...style, width: 400 }}>
         <h2 id="parent-modal-title">Add period</h2>
-        <p id="parent-modal-description">
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </p>
+        <form>
+          <InputLabel />
+          {periodName}
+          <TextField
+            value={periodName}
+            onChange={(e) => setPeriodName(e.target.value)}
+          />
+        </form>
         {/* <ChildModal /> */}
+        <Button onClick={prop.onSubmit}>
+          <AddIcon color="" />
+        </Button>
       </Box>
     </Modal>
   );

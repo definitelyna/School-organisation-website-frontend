@@ -13,6 +13,8 @@ import AddIcon from "@mui/icons-material/Add";
 
 dayjs.extend(customParseFormat);
 
+const apiURL = "http://localhost:8080/api/periods";
+
 class Period {
   constructor(name, dayOfWeek, startTime, endTime, note) {
     this.name = name; //string
@@ -62,8 +64,8 @@ const testPeriod3 = new Period(
 
 export default function Timetable() {
   const [timetable, setTimetable] = useState({
-    Monday: [testPeriod1, testPeriod3],
-    Tuesday: [testPeriod2],
+    Monday: [],
+    Tuesday: [],
     Wednesday: [],
     Thursday: [],
     Friday: [],
@@ -73,24 +75,60 @@ export default function Timetable() {
   const [currentDaySelected, setCurrentDaySelected] = useState("Monday");
   const [view, setView] = useState("Day");
   const [createPeriodOpen, setCreatePeriodOpen] = useState(false);
-  const [newPeriodAdded, setNewPeriodAdded] = useState(false);
 
   const fetchTimetableData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/periods");
-      console.log(response);
+      const response = await fetch(apiURL);
+      const data = await response.json();
+      addAPIDataToTimetable(data);
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  fetchTimetableData();
+  const addAPIDataToTimetable = (apiData) => {
+    setTimetable({
+      Monday: [],
+      Tuesday: [],
+      Wednesday: [],
+      Thursday: [],
+      Friday: [],
+      Saturday: [],
+      Sunday: [],
+    });
+    apiData.map((eachData) => {
+      const thisName = eachData.name;
+      const thisDay = eachData.day;
+      const thisStartTime = eachData.startTime;
+      const thisEndTime = eachData.endTime;
+      const thisNote = eachData.note;
+      const thisPeriod = new Period(
+        thisName,
+        thisDay,
+        thisStartTime,
+        thisEndTime,
+        thisNote
+      );
+      setTimetable((prevData) => ({
+        ...prevData, // Spread the previous object
+        [thisDay]: [...prevData[thisDay], thisPeriod], // Spread and update the 'items' array
+      }));
+    });
+  };
+
+  useEffect(() => {
+    fetchTimetableData();
+  }, []);
 
   const handleCreatePeriodOpen = () => {
     setCreatePeriodOpen(true);
   };
   const handleCreatePeriodClose = () => {
     setCreatePeriodOpen(false);
+  };
+
+  const handleCreatePeriod = () => {
+    fetchTimetableData();
   };
 
   const handleDayChange = (e) => {
@@ -144,7 +182,11 @@ export default function Timetable() {
           />
         )}
       </Paper>
-      <CreatePeriod open={createPeriodOpen} onClose={handleCreatePeriodClose} />
+      <CreatePeriod
+        open={createPeriodOpen}
+        onClose={handleCreatePeriodClose}
+        onSubmit={handleCreatePeriod}
+      />
     </UIOverlay>
   );
 }
