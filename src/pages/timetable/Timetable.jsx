@@ -10,10 +10,9 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import CreatePeriod from "./components/CreatePeriod";
 import AddIcon from "@mui/icons-material/Add";
-
 dayjs.extend(customParseFormat);
 
-const apiURL = "http://localhost:8080/api/periods";
+const apiURL = import.meta.env.VITE_API_URL;
 
 class Period {
   constructor(name, dayOfWeek, startTime, endTime, note) {
